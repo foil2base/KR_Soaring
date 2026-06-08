@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1720">
+<meta name="color-scheme" content="light">
+<meta name="application-name" content="Nationwide Paragliding Launch Sites Windguru Map">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Launch Site Map">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com data:; img-src 'self' https: data:; connect-src https://thermal.kk7.ch; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self' data: blob:; upgrade-insecure-requests">
+<title>Nationwide Paragliding Launch Sites Windguru Map</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2296%22%20fill%3D%22%230f1720%22%2F%3E%3Cpath%20d%3D%22M80%20320c74-112%20162-168%20264-168%2053%200%2091%2016%20115%2043-80%200-146%2029-197%2085l-56%2061c-40%2043-82%2064-126%2064v-85z%22%20fill%3D%22%23f8fafc%22%2F%3E%3Ccircle%20cx%3D%22371%22%20cy%3D%22163%22%20r%3D%2240%22%20fill%3D%22%2338bdf8%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2296%22%20fill%3D%22%230f1720%22%2F%3E%3Cpath%20d%3D%22M80%20320c74-112%20162-168%20264-168%2053%200%2091%2016%20115%2043-80%200-146%2029-197%2085l-56%2061c-40%2043-82%2064-126%2064v-85z%22%20fill%3D%22%23f8fafc%22%2F%3E%3Ccircle%20cx%3D%22371%22%20cy%3D%22163%22%20r%3D%2240%22%20fill%3D%22%2338bdf8%22%2F%3E%3C%2Fsvg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Nationwide%20Paragliding%20Launch%20Sites%20Windguru%20Map%22%2C%22short_name%22%3A%22Launch%20Site%20Map%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%230f1720%22%2C%22orientation%22%3A%22any%22%2C%22icons%22%3A%5B%5D%7D">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
+<style>
+  :root { --panel-bg: rgba(255,255,255,.96); --blue:#005bbb; }
+  html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overscroll-behavior: none; overflow: hidden; background:#eef2f5; }
+  #map { height: 100vh; height: 100svh; height: 100dvh; width: 100%; }
+  .load-error { display:flex; align-items:center; justify-content:center; height:100%; padding:24px; box-sizing:border-box; color:#2f3843; text-align:center; font-weight:700; line-height:1.5; }
+  .panel { position: absolute; top: 10px; top: max(10px, env(safe-area-inset-top)); left: 10px; z-index: 1000; background: var(--panel-bg); padding: 12px; border-radius: 14px; box-shadow: 0 2px 14px rgba(0,0,0,.20); width: min(370px, calc(100vw - 20px)); max-height: calc(100vh - 20px); max-height: calc(100dvh - 20px); overflow:auto; box-sizing: border-box; backdrop-filter: blur(6px); -webkit-overflow-scrolling: touch; }
+  .panel-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .panel h1 { margin: 0; font-size: 17px; line-height:1.25; }
+  .toggle-btn { border: 0; background:#f0f2f5; border-radius: 10px; padding: 8px 10px; font-weight: 700; font-size:13px; }
+  .panel-body { margin-top: 8px; }
+  .panel.collapsed .panel-body { display:none; }
+  .panel p { margin: 4px 0; font-size: 12px; color: #555; line-height: 1.4; }
+  .reference { font-size: 10.5px !important; color:#777 !important; }
+  .reference a { color:#5b6673; text-decoration: underline; text-underline-offset: 2px; }
+  .controls { display: grid; grid-template-columns: 1fr 118px; gap: 7px; margin-top: 9px; }
+  input, select, button { font-size: 14px; }
+  input:not([type="range"]), select { padding: 9px; border: 1px solid #cfd4da; border-radius: 10px; background:white; min-height: 40px; box-sizing: border-box; }
+  input:not([type="range"]) { min-width: 0; }
+  .layer-toggle-row { display:grid; grid-template-columns: 100px 1fr; gap:7px; align-items:center; margin-top:7px; }
+  .layer-toggle-btn { min-height: 38px; border:1px solid #cfd4da; background:#fff; border-radius:10px; font-weight:800; }
+  .layer-summary { color:#555; font-size:11px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .layer-panel { margin-top: 9px; background: rgba(24,31,38,.86); color:#fff; border:1px solid rgba(255,255,255,.22); border-radius:8px; overflow:hidden; font-size:14px; }
+  .layer-panel[hidden] { display:none; }
+  .layer-group { padding: 7px 10px; border-top: 1px solid rgba(255,255,255,.22); }
+  .layer-group:first-child { border-top:0; }
+  .layer-option { display:flex; align-items:center; gap:8px; min-height:25px; line-height:1.2; font-weight:700; }
+  .layer-option input { width:16px; height:16px; margin:0; accent-color:#1f7aff; flex:0 0 auto; }
+  .layer-option input:disabled + span { opacity:.45; }
+  .opacity-control { display:grid; grid-template-columns: 76px 1fr 42px; gap:8px; align-items:center; }
+  .opacity-control input[type="range"] { width:100%; min-width:0; accent-color:#1f7aff; }
+  .opacity-control span { color:#fff; font-size:12px; font-weight:800; text-align:right; }
+  .quick-buttons { display:grid; grid-template-columns: repeat(3, 1fr); gap:7px; margin-top:7px; }
+  .quick-buttons button { min-height: 40px; border:1px solid #cfd4da; background:#fff; border-radius:10px; font-weight:700; }
+  .count { margin-top: 7px; font-size: 12px; color:#444; font-weight:600; }
+  .popup-title { font-weight: 800; font-size: 16px; margin-bottom: 5px; }
+  .popup-line { font-size: 14px; margin: 3px 0; }
+  .wg-btn { display:block; text-align:center; margin-top:10px; padding:11px 12px; background:var(--blue); color:white !important; text-decoration:none; border-radius:10px; font-weight:800; font-size:15px; }
+  .legend { position:absolute; right:12px; bottom:18px; z-index:1000; background:rgba(255,255,255,.94); padding:8px 10px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.15); font-size:12px; }
+  .leaflet-popup-content { margin: 12px 14px; min-width: 190px; }
+  .leaflet-control-zoom a { width: 34px !important; height: 34px !important; line-height: 34px !important; }
+  .invertalpha img { filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='invertalpha' x='0' y='0' width='100%25' height='100%25'%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1 1'/%3E%3C/filter%3E%3C/svg%3E#invertalpha") opacity(85%); }
+  @media (max-width: 640px){
+    .panel { top: auto; left: 8px; right: 8px; bottom: 10px; bottom: max(10px, env(safe-area-inset-bottom)); width: auto; max-height: 45vh; max-height: 45dvh; overflow: auto; }
+    .panel.collapsed { width: auto; }
+    .panel h1 { font-size: 15px; }
+    .panel p { font-size: 11.5px; }
+    .controls { grid-template-columns: 1fr; }
+    .layer-toggle-row { grid-template-columns: 94px 1fr; }
+    .opacity-control { grid-template-columns: 68px 1fr 42px; }
+    .legend { display:none; }
+    .leaflet-top { top: max(8px, env(safe-area-inset-top)); }
+    .leaflet-popup-content-wrapper { border-radius: 14px; }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel" id="panel">
+  <div class="panel-head">
+    <h1>Nationwide Launch Sites Windguru Map</h1>
+    <button class="toggle-btn" id="togglePanel" type="button">Collapse</button>
+  </div>
+  <div class="panel-body">
+    <p>Tap a marker to open the region/mountain name and Windguru link. The first screen shows Korea only.</p>
+    <p class="reference">Reference: <a href="https://m.cafe.daum.net/-icpara/7O6M/2" target="_blank" rel="noopener noreferrer">Daum Cafe nationwide launch-site data</a></p>
+    <div class="controls">
+      <input id="search" placeholder="Example: Okmasan, Yangju, Hadong" autocomplete="off" />
+      <select id="region"><option value="">All regions</option></select>
+    </div>
+    <div class="layer-toggle-row">
+      <button class="layer-toggle-btn" id="toggleLayerPanel" type="button" aria-controls="layerPanel" aria-expanded="false">Map Options</button>
+      <div class="layer-summary" id="layerSummary"></div>
+    </div>
+    <div class="layer-panel" id="layerPanel" aria-label="지도 옵션" hidden>
+      <div class="layer-group">
+        <label class="layer-option"><input type="radio" name="baseLayer" value="osm" checked><span>OSM</span></label>
+        <label class="layer-option"><input type="radio" name="baseLayer" value="topoXc"><span>Topo XC</span></label>
+        <label class="layer-option"><input type="radio" name="baseLayer" value="topoGrey"><span>Topo Grey</span></label>
+        <label class="layer-option"><input type="radio" name="baseLayer" value="satellite"><span>Satellite</span></label>
+      </div>
+      <div class="layer-group">
+        <label class="layer-option"><input type="checkbox" class="kk7-raster-layer" value="certainty"><span>Certainty</span></label>
+        <label class="layer-option"><input type="checkbox" class="kk7-raster-layer" value="skyways"><span>Skyways</span></label>
+        <label class="layer-option"><input type="checkbox" class="kk7-raster-layer" value="thermals" checked><span>Thermals</span></label>
+        <label class="layer-option"><input type="checkbox" id="hotspotsLayer"><span>Hotspots</span></label>
+      </div>
+      <div class="layer-group">
+        <label class="layer-option"><input type="checkbox" id="timeFilter" checked><span>Time Filter</span></label>
+        <label class="layer-option"><input type="radio" name="season" value="all"><span>All year</span></label>
+        <label class="layer-option"><input type="radio" name="season" value="jan"><span>January</span></label>
+        <label class="layer-option"><input type="radio" name="season" value="apr"><span>April</span></label>
+        <label class="layer-option"><input type="radio" name="season" value="jul"><span>July</span></label>
+        <label class="layer-option"><input type="radio" name="season" value="oct"><span>October</span></label>
+      </div>
+      <div class="layer-group">
+        <label class="layer-option"><input type="radio" name="timeOfDay" value="all" checked><span>All day</span></label>
+        <label class="layer-option"><input type="radio" name="timeOfDay" value="04"><span>Morning</span></label>
+        <label class="layer-option"><input type="radio" name="timeOfDay" value="07"><span>Midday</span></label>
+        <label class="layer-option"><input type="radio" name="timeOfDay" value="10"><span>Evening</span></label>
+      </div>
+      <div class="layer-group opacity-control">
+        <span>Opacity</span>
+        <input id="thermalOpacity" type="range" min="0.1" max="1" step="0.05" value="0.5" />
+        <span id="thermalOpacityValue">50%</span>
+      </div>
+    </div>
+    <div class="quick-buttons">
+      <button id="btnKorea" type="button">View Korea</button>
+      <button id="btnAll" type="button">Include Overseas</button>
+      <button id="btnClear" type="button">Reset</button>
+    </div>
+    <div class="count" id="count"></div>
+  </div>
+</div>
+<div class="legend"><b>Showing:</b> launch sites/mountains with Windguru links</div>
+<script>
+if(!window.L){
+  document.getElementById('map').innerHTML = '<div class="load-error">Could not load the map library.<br>Please check your internet connection and refresh the page.</div>';
+  throw new Error('Leaflet failed to load');
+}
+const sites = [
+{region:'Overseas', place:'Bali', name:'Timbiseu Launch Site', id:'133403', lat:-8.842214, lon:115.192, note:'southsoutheast 101m'},
+{region:'Overseas', place:'Tsushima, Japan', name:'West Side', id:'216597', lat:34.496158, lon:129.292861, note:''},
+{region:'Overseas', place:'Tsushima, Japan', name:'East Side', id:'216599', lat:34.218189, lon:129.313544, note:''},
+{region:'Overseas', place:'Pingtung, Taiwan', name:'Launch Site', id:'284402', lat:22.692744, lon:120.787081, note:''},
+
+{region:'Incheon / Gyeonggi', place:'Ansan', name:'Daebudo Practice Field', id:'306036', lat:37.263503, lon:126.574167, note:'west 58m -> 40m'},
+{region:'Incheon / Gyeonggi', place:'Ansan', name:'Daebudo Training Center', id:'306040', lat:37.215483, lon:126.644589, note:'southwest 66m -> 60m'},
+{region:'Incheon / Gyeonggi', place:'Ansan', name:'Daebudo Gubongsan', id:'118468', lat:37.276153, lon:126.563342, note:'west 87m -> 80m'},
+{region:'Incheon / Gyeonggi', place:'Incheon', name:'Soraesan', id:'114403', lat:37.452661, lon:126.777914, note:'west 299m -> 220m'},
+{region:'Incheon / Gyeonggi', place:'Gimpo', name:'Gahyeonsan', id:'153826', lat:37.6276, lon:126.6481, note:'southwest 161m -> 140m'},
+{region:'Incheon / Gyeonggi', place:'Ansan', name:'East Maggol', id:'234170', lat:37.347883, lon:126.887497, note:'west 283m -> 230m'},
+{region:'Incheon / Gyeonggi', place:'Hwaseong', name:'Eoseom', id:'358829', lat:37.246719, lon:126.650547, note:'west 37m -> 30m'},
+{region:'Incheon / Gyeonggi', place:'Gwangmyeong', name:'West Dogsan', id:'167634', lat:37.415, lon:126.8699, note:'west 204m -> 150m'},
+{region:'Incheon / Gyeonggi', place:'Anseong', name:'West Unsan', id:'181249', lat:36.929294, lon:127.281408, note:'northwest 507m -> 370m'},
+{region:'Incheon / Gyeonggi', place:'Yangpyeong', name:'Yumyeongsan', id:'236977', lat:37.573206, lon:127.484772, note:'west/east 804m -> 650m'},
+{region:'Incheon / Gyeonggi', place:'Gwangju', name:'Bultansan', id:'124528', lat:37.3985, lon:127.2642, note:'west 136m -> 80m'},
+{region:'Incheon / Gyeonggi', place:'Yongin', name:'Jeonggwangsan', id:'137033', lat:37.310322, lon:127.277928, note:'west 448m -> 280m'},
+{region:'Incheon / Gyeonggi', place:'Deokso', name:'Yebongsan', id:'236976', lat:37.565731, lon:127.257283, note:'west 565m -> 500m'},
+{region:'Incheon / Gyeonggi', place:'Yangju', name:'Garaebi Takeoff', id:'181640', lat:37.821522, lon:127.005933, note:'west 315m -> 190m'},
+{region:'Incheon / Gyeonggi', place:'Yongin', name:'Waujeongsa', id:'235439', lat:37.150878, lon:127.27335, note:'east 306m -> 190m'},
+{region:'Incheon / Gyeonggi', place:'Icheon', name:'Weonjeogsan', id:'125409', lat:37.3584, lon:127.4425, note:'west 630m -> 390m'},
+{region:'Incheon / Gyeonggi', place:'Maseok', name:'Songrasan', id:'124534', lat:37.6687, lon:127.3138, note:'west 494m -> 280m'},
+{region:'Incheon / Gyeonggi', place:'Cheorwon', name:'Unceon Launch Site', id:'163420', lat:38.091239, lon:127.285725, note:'west 413m -> 250m'},
+{region:'Incheon / Gyeonggi', place:'Cheorwon', name:'Galmal Launch Site', id:'163419', lat:38.102494, lon:127.091631, note:'southwest 284m -> 110m'},
+{region:'Incheon / Gyeonggi', place:'Jangheung', name:'Eunbongsan', id:'295586', lat:37.785261, lon:126.963506, note:'north·east 361m -> 220m'},
+{region:'Incheon / Gyeonggi', place:'Ansan / Siheung', name:'100 Hill', id:'306469', lat:37.368761, lon:126.744433, note:'southwest 86m -> 70m'},
+{region:'Incheon / Gyeonggi', place:'Namyangju', name:'Paragliding Practice Field', id:'270688', lat:37.608817, lon:127.1756, note:'east/west/south/north 54m -> 10m'},
+{region:'Incheon / Gyeonggi', place:'Gwangju', name:'Maesanri', id:'282056', lat:37.359392, lon:127.275472, note:'west'},
+{region:'Incheon / Gyeonggi', place:'Gwangju', name:'Maesanri Landing Zone', id:'124408', lat:37.358333, lon:127.255833, note:'88m'},
+{region:'Incheon / Gyeonggi', place:'Paju', name:'Hyeeumryeong', id:'344255', lat:37.738194, lon:126.898328, note:'west 370m -> 220m'},
+{region:'Incheon / Gyeonggi', place:'Suwon', name:'Gwanggyosan', id:'358265', lat:37.351742, lon:127.018472, note:'northwest 350m&550m'},
+{region:'Incheon / Gyeonggi', place:'Gwangtan', name:'Bagdalsan', id:'444984', lat:37.765592, lon:126.880008, note:'west 269m'},
+
+{region:'Gangwon-do', place:'Chuncheon', name:'Daeryongsan', id:'183446', lat:37.856422, lon:127.808719, note:'west 640m -> 460m'},
+{region:'Gangwon-do', place:'Chuncheon', name:'Daeryongsan Landing Zone', id:'236892', lat:37.866158, lon:127.787481, note:'180m'},
+{region:'Gangwon-do', place:'Chuncheon', name:'Gubongsan', id:'124416', lat:37.889444, lon:127.784722, note:'west 385m -> 210m'},
+{region:'Gangwon-do', place:'Chuncheon', name:'Hangyesan', id:'211573', lat:37.954114, lon:127.719583, note:'342m'},
+{region:'Gangwon-do', place:'Yanggu', name:'Samyeongsan', id:'218368', lat:38.106436, lon:127.959164, note:'east·southeast 599m -> 410m'},
+{region:'Gangwon-do', place:'Sokcho', name:'Misiryeong', id:'183448', lat:38.214683, lon:128.438181, note:'east 782m -> 600m'},
+{region:'Gangwon-do', place:'Sokcho', name:'Seonindae', id:'218369', lat:38.217936, lon:128.465136, note:'east 610m -> 370m'},
+{region:'Gangwon-do', place:'Gangneung', name:'Daegwanryeong', id:'173596', lat:37.699806, lon:128.753972, note:'east 1013m -> 780m'},
+{region:'Gangwon-do', place:'Gangneung', name:'Gwaebangsan', id:'173611', lat:37.718333, lon:128.993889, note:'east·northeast·west 268m -> 210m'},
+{region:'Gangwon-do', place:'Taebaek', name:'Taebaegsan', id:'146046', lat:37.116842, lon:128.94975, note:'1550m -> 750m'},
+{region:'Gangwon-do', place:'Donghae', name:'Bongsudae', id:'173617', lat:37.572778, lon:129.106528, note:'east/north/south 173m -> 90m'},
+{region:'Gangwon-do', place:'Inje', name:'Inje Launch Site', id:'152935', lat:38.078647, lon:128.169828, note:'southwest 540m -> 320m'},
+{region:'Gangwon-do', place:'Wonju', name:'Ciagsan', id:'274721', lat:37.371689, lon:128.050511, note:'1065m'},
+{region:'Gangwon-do', place:'Inje', name:'Giryongsan', id:'219593', lat:38.087031, lon:128.166653, note:'east 630m -> 410m'},
+{region:'Gangwon-do', place:'Inje', name:'Garori Takeoff', id:'218363', lat:38.047997, lon:128.142214, note:'south 320m -> 130m'},
+{region:'Gangwon-do', place:'Yeongwol', name:'Bongraesan', id:'285079', lat:37.198886, lon:128.486053, note:'west 777m -> 570m'},
+{region:'Gangwon-do', place:'Pyeongchang', name:'Jangamsan', id:'173628', lat:37.381139, lon:128.420906, note:'west 700m -> 410m'},
+{region:'Gangwon-do', place:'Pyeongchang', name:'Jangamsan Landing Zone', id:'202755', lat:37.376439, lon:128.410322, note:'300m'},
+{region:'Gangwon-do', place:'Yongpyeong', name:'Balwangsan Ski Area', id:'358762', lat:37.611667, lon:128.671667, note:'1111m -> 360m'},
+{region:'Gangwon-do', place:'Jeongseon', name:'Mindungsan', id:'236038', lat:37.271697, lon:128.774958, note:'1089m -> 570m'},
+{region:'Gangwon-do', place:'Seoraksan', name:'Daeceongbong', id:'349937', lat:38.1186, lon:128.4668, note:'1708m'},
+{region:'Gangwon-do', place:'Hongcheon', name:'South San', id:'440187', lat:37.678508, lon:127.895933, note:'northwest 391m'},
+
+{region:'Chungcheong-do', place:'Jecheon', name:'Bibongsan', id:'181096', lat:37.008378, lon:128.143244, note:'west 488m -> 340m'},
+{region:'Chungcheong-do', place:'Cheonan', name:'Heugseongsan', id:'189231', lat:36.7971, lon:127.206792, note:'west/east 449m -> 260m'},
+{region:'Chungcheong-do', place:'Dangjin', name:'Waemog Launch Site', id:'306199', lat:37.047217, lon:126.525275, note:'east 80m -> 75m'},
+{region:'Chungcheong-do', place:'Nonsan', name:'Hambagbong Gyebaeg Launch Site', id:'173241', lat:36.204392, lon:127.241119, note:'west 380m -> 210m'},
+{region:'Chungcheong-do', place:'Boryeong', name:'Ogmasan', id:'124420', lat:36.315, lon:126.637222, note:'west 530m -> 460m'},
+{region:'Chungcheong-do', place:'Seosan', name:'Gayasan', id:'219005', lat:36.702833, lon:126.603656, note:'northwest 508m -> 360m'},
+{region:'Chungcheong-do', place:'Seosan', name:'Dobisan', id:'169887', lat:36.709758, lon:126.409633, note:'west/east 238m -> 160m'},
+{region:'Chungcheong-do', place:'Gwangcheon', name:'O West San', id:'128905', lat:36.462175, lon:126.655733, note:'west 790m -> 600m'},
+{region:'Chungcheong-do', place:'Hongseong', name:'Baegweolsan', id:'240255', lat:36.608517, lon:126.623247, note:'east 376m -> 300m'},
+{region:'Chungcheong-do', place:'Dangjin', name:'Bonghwadae', id:'136385', lat:36.832631, lon:126.549892, note:'west 289m -> 240m'},
+{region:'Chungcheong-do', place:'Cheongju', name:'Geosdaesan', id:'183303', lat:36.6453, lon:127.5376, note:'west 460m -> 290m'},
+{region:'Chungcheong-do', place:'Daejeon', name:'Sigjangsan', id:'211621', lat:36.300417, lon:127.480472, note:'west 581m -> 450m'},
+{region:'Chungcheong-do', place:'Gongju', name:'Gongju East', id:'173252', lat:36.50065, lon:127.012058, note:'east 270m -> 210m'},
+{region:'Chungcheong-do', place:'Gongju', name:'Gongju Southwest', id:'236043', lat:36.519225, lon:127.016372, note:'southwest 207m -> 170m'},
+{region:'Chungcheong-do', place:'Gongju', name:'Gongju Northwest', id:'236740', lat:36.497908, lon:127.007281, note:'northwest 300m -> 240m'},
+{region:'Chungcheong-do', place:'Daejeon', name:'Nae East Launch Site', id:'173248', lat:36.329525, lon:127.359139, note:'west 140m -> 90m'},
+{region:'Chungcheong-do', place:'Yesan', name:'Geumosan/bongsusan', id:'236781', lat:36.593931, lon:126.772447, note:'west 465m -> 380m'},
+{region:'Chungcheong-do', place:'Geumsan', name:'Deoggibong', id:'250053', lat:36.039886, lon:127.531186, note:'west 467m -> 290m'},
+{region:'Chungcheong-do', place:'Danyang', name:'Yangbangsan', id:'232291', lat:36.968408, lon:128.381594, note:'northwest·southeast 639m -> 460m'},
+{region:'Chungcheong-do', place:'Danyang', name:'Dusan', id:'228253', lat:36.996297, lon:128.395986, note:'westnorthwest 509m -> 360m'},
+{region:'Chungcheong-do', place:'Danyang', name:'Sobaegsan', id:'236897', lat:36.953697, lon:128.470858, note:'1330m -> 1010m'},
+{region:'Chungcheong-do', place:'Hwanggan', name:'Baeghwasan', id:'294879', lat:36.301194, lon:127.904308, note:'west 816m / takeoff 480m -> 320m'},
+{region:'Chungcheong-do', place:'Jincheon', name:'Jinceon Launch Site', id:'284092', lat:36.854028, lon:127.514106, note:'northwest 214m -> 160m'},
+{region:'Chungcheong-do', place:'Geumsan', name:'Majeon Launch Site', id:'353194', lat:36.192236, lon:127.488783, note:'322m'},
+{region:'Chungcheong-do', place:'Daejeon', name:'Sintanjin Launch Site', id:'353196', lat:36.455931, lon:127.397094, note:'120m'},
+{region:'Chungcheong-do', place:'Taean', name:'Sinduri', id:'47591', lat:36.846247, lon:126.193942, note:''},
+
+{region:'Gyeongsang-do', place:'Ulsan', name:'Ganweoljae', id:'191314', lat:35.547, lon:129.0445, note:'east 786m -> 630m'},
+{region:'Gyeongsang-do', place:'Mungyeong', name:'Flying Land', id:'124527', lat:36.7322, lon:128.1747, note:'west 865m -> 630m'},
+{region:'Gyeongsang-do', place:'Mungyeong', name:'Landing Zone', id:'283454', lat:36.736881, lon:128.154225, note:'235m'},
+{region:'Gyeongsang-do', place:'Sangju', name:'Hwanggeumsan', id:'157080', lat:36.467661, lon:128.278028, note:'west 292m -> 120m'},
+{region:'Gyeongsang-do', place:'Changwon', name:'Jeongbyeongsan', id:'133656', lat:35.259058, lon:128.696014, note:'512m -> 430m'},
+{region:'Gyeongsang-do', place:'Geoje', name:'Gyeryongsan', id:'238030', lat:34.865775, lon:128.614153, note:'westsouthwest 512m -> 450m'},
+{region:'Gyeongsang-do', place:'Namhae', name:'Mangunsan', id:'354716', lat:34.844825, lon:127.845139, note:'west/east 786m -> 680m'},
+{region:'Gyeongsang-do', place:'Miryang', name:'Eumdalsan', id:'236143', lat:35.426092, lon:128.800578, note:'northwest 163m -> 140m'},
+{region:'Gyeongsang-do', place:'Uiryeong', name:'Hanusan', id:'164103', lat:35.3949, lon:128.2057, note:'southeast·northwest 766m -> 570m'},
+{region:'Gyeongsang-do', place:'Sancheong', name:'Teugri Takeoff', id:'132959', lat:35.450322, lon:127.833825, note:'southeast 473m -> 310m'},
+{region:'Gyeongsang-do', place:'Namhae', name:'Geumsan', id:'236893', lat:34.75365, lon:127.991931, note:'south 611m -> 510m'},
+{region:'Gyeongsang-do', place:'Pohang', name:'Cilpo', id:'128902', lat:36.124981, lon:129.400664, note:'east 88m -> 85m'},
+{region:'Gyeongsang-do', place:'Yeongcheon', name:'Bohyeonsan', id:'211612', lat:36.160611, lon:128.974, note:'east·southwest 1109m -> 740m'},
+{region:'Gyeongsang-do', place:'Ulsan', name:'Muryongsan', id:'45650', lat:35.591111, lon:129.398611, note:'east 457m -> 280m'},
+{region:'Gyeongsang-do', place:'Jinju', name:'Weolasan', id:'164119', lat:35.1905, lon:128.1949, note:'southeast 482m -> 360m'},
+{region:'Gyeongsang-do', place:'Geochang', name:'Mangsilbong', id:'271073', lat:35.668192, lon:127.877469, note:'east 654m -> 450m'},
+{region:'Gyeongsang-do', place:'Geochang', name:'Gamagsan', id:'271072', lat:35.595083, lon:127.927917, note:'921m -> 600m'},
+{region:'Gyeongsang-do', place:'Hapcheon', name:'Daeamsan', id:'118263', lat:35.538417, lon:128.21855, note:'south 568m -> 470m'},
+{region:'Gyeongsang-do', place:'Gimhae', name:'Bonghwasan', id:'133655', lat:35.316947, lon:128.778306, note:'south 80m -> 60m'},
+{region:'Gyeongsang-do', place:'Cheongdo', name:'Weonjeongsan', id:'211613', lat:35.635278, lon:128.775, note:'westnorthwest 507m -> 440m'},
+{region:'Gyeongsang-do', place:'Cheongsong', name:'Banggwangsan', id:'214620', lat:36.446142, lon:129.062747, note:'south 508m -> 290m'},
+{region:'Gyeongsang-do', place:'Haman', name:'Jayangsan', id:'164101', lat:35.291764, lon:128.451097, note:'southeast·northwest 344m -> 300m'},
+{region:'Gyeongsang-do', place:'Ulsan', name:'Goheonsan', id:'54532', lat:35.641294, lon:129.08625, note:'southeast 1018m -> 800m'},
+{region:'Gyeongsang-do', place:'Ulsan', name:'Neung East San', id:'90835', lat:35.578383, lon:129.007539, note:'1000m -> 640m'},
+{region:'Gyeongsang-do', place:'Jinhae', name:'Jangbogsan', id:'128901', lat:35.167792, lon:128.708567, note:'south 405m -> 340m'},
+{region:'Gyeongsang-do', place:'Masan', name:'Baramjae', id:'191308', lat:35.1833, lon:128.5255, note:'southeast 338m -> 210m'},
+{region:'Gyeongsang-do', place:'Gimhae', name:'Jinrye', id:'164120', lat:35.2207, lon:128.7414, note:'northeast 378m -> 230m'},
+{region:'Gyeongsang-do', place:'Gimhae', name:'Muceogsan', id:'236726', lat:35.350167, lon:128.862294, note:'west 370m -> 320m'},
+{region:'Gyeongsang-do', place:'Samcheonpo', name:'Gagsan', id:'118264', lat:34.955097, lon:128.059539, note:'southwest·northeast 305m -> 260m'},
+{region:'Gyeongsang-do', place:'Samcheonpo', name:'Yongdu Takeoff', id:'238941', lat:34.954394, lon:128.098531, note:'south 183m -> 130m'},
+{region:'Gyeongsang-do', place:'Daegu', name:'Daenisan', id:'238121', lat:35.676175, lon:128.409556, note:'south 300m -> 180m'},
+{region:'Gyeongsang-do', place:'Ulsan', name:'Gomdoli', id:'186055', lat:35.985594, lon:129.102292, note:'southeast 648m -> 410m'},
+{region:'Gyeongsang-do', place:'Yangsan', name:'Obongsan', id:'238929', lat:35.341694, lon:129.005414, note:'south 421m -> 370m'},
+{region:'Gyeongsang-do', place:'Yangsan', name:'Ceonseongsan', id:'90836', lat:35.40135, lon:129.106161, note:'east 859m -> 600m'},
+{region:'Gyeongsang-do', place:'Busan', name:'Geumjeongsan', id:'236490', lat:35.270633, lon:129.060319, note:'east·west 654m -> 390m'},
+{region:'Gyeongsang-do', place:'Gimhae', name:'Imhosan', id:'303222', lat:35.225958, lon:128.868958, note:'145m -> 120m'},
+{region:'Gyeongsang-do', place:'Hadong', name:'Hyeongjebong', id:'354872', lat:35.205036, lon:127.682678, note:'east 1054m -> 1040m'},
+{region:'Gyeongsang-do', place:'Hadong', name:'Gujebong', id:'189789', lat:35.129703, lon:127.717639, note:'southwest 590m -> 580m'},
+{region:'Gyeongsang-do', place:'Hadong', name:'Landing Zone', id:'247614', lat:35.13505, lon:127.690589, note:'7m'},
+{region:'Gyeongsang-do', place:'Busan', name:'Hwangryeongsan', id:'285311', lat:35.157044, lon:129.081864, note:'398m -> 240m'}
+];
+
+const map = L.map('map', { zoomControl: true, tap: true }).setView([36.45, 127.95], 7);
+const baseLayers = {
+  osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors',
+    zIndex: 100
+  }),
+  topoXc: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxNativeZoom: 17,
+    maxZoom: 18,
+    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap',
+    zIndex: 100
+  }),
+  topoGrey: L.tileLayer('https://sgx.geodatenzentrum.de/wmts_topplus_open/tile/1.0.0/web_grau/default/WEBMERCATOR/{z}/{y}/{x}.png', {
+    maxNativeZoom: 18,
+    maxZoom: 18,
+    attribution: 'Map data: &copy; <a href="https://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>',
+    zIndex: 100
+  }),
+  satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxNativeZoom: 17,
+    maxZoom: 18,
+    attribution: 'Satellite &copy; Esri',
+    zIndex: 100
+  })
+};
+let activeBaseLayer = baseLayers.osm;
+activeBaseLayer.addTo(map);
+
+const kk7RasterLayerConfigs = {
+  certainty: { tileName: 'knowledges', maxNativeZoom: 12, className: 'invertalpha' },
+  skyways: { tileName: 'skyways', maxNativeZoom: 13 },
+  thermals: { tileName: 'thermals', maxNativeZoom: 12 }
+};
+const activeKk7RasterLayers = {};
+let activeHotspotsLayer = null;
+let hotspotRequestId = 0;
+let hotspotReloadTimer = null;
+
+function thermalSource(){
+  return encodeURIComponent(window.location.hostname || 'local-file');
+}
+function currentSeasonKey(date = new Date()){
+  const month = date.getMonth();
+  if(month === 11 || month <= 1) return 'jan';
+  if(month >= 2 && month <= 4) return 'apr';
+  if(month >= 5 && month <= 7) return 'jul';
+  return 'oct';
+}
+function selectedValue(name, fallback){
+  const input = document.querySelector(`input[name="${name}"]:checked`);
+  return input ? input.value : fallback;
+}
+function kk7Category(){
+  if(!document.getElementById('timeFilter').checked) return 'all_all';
+  return `${selectedValue('season', currentSeasonKey())}_${selectedValue('timeOfDay', 'all')}`;
+}
+function layerOpacity(){
+  return Number(document.getElementById('thermalOpacity').value);
+}
+function optionLabel(selector, fallback = ''){
+  const input = document.querySelector(selector);
+  const label = input ? input.closest('label') : null;
+  return label ? label.textContent.trim() : fallback;
+}
+function enabledKk7LayerLabels(){
+  return [...document.querySelectorAll('.kk7-raster-layer:checked')]
+    .map((input) => input.closest('label').textContent.trim())
+    .concat(document.getElementById('hotspotsLayer').checked ? ['Hotspots'] : []);
+}
+function updateLayerSummary(){
+  const base = optionLabel('input[name="baseLayer"]:checked', 'OSM');
+  const kk7Layers = enabledKk7LayerLabels();
+  const overlay = kk7Layers.length ? kk7Layers.join(', ') : 'No overlay';
+  const time = document.getElementById('timeFilter').checked
+    ? `${optionLabel('input[name="season"]:checked')} ${optionLabel('input[name="timeOfDay"]:checked')}`
+    : 'All year All day';
+  document.getElementById('layerSummary').textContent = `${base} | ${overlay} | ${time} | ${Math.round(layerOpacity() * 100)}%`;
+}
+function updateOpacityLabel(){
+  document.getElementById('thermalOpacityValue').textContent = `${Math.round(layerOpacity() * 100)}%`;
+  updateLayerSummary();
+}
+function setBaseLayer(layerName){
+  const nextLayer = baseLayers[layerName] || baseLayers.osm;
+  if(activeBaseLayer !== nextLayer){
+    map.removeLayer(activeBaseLayer);
+    activeBaseLayer = nextLayer;
+    activeBaseLayer.addTo(map);
+  }
+  updateLayerSummary();
+}
+function removeKk7RasterLayers(){
+  Object.keys(activeKk7RasterLayers).forEach((key) => {
+    map.removeLayer(activeKk7RasterLayers[key]);
+    delete activeKk7RasterLayers[key];
+  });
+}
+function syncKk7RasterLayers(){
+  removeKk7RasterLayers();
+  const category = kk7Category();
+  ['certainty', 'skyways', 'thermals'].forEach((key, index) => {
+    const checkbox = document.querySelector(`.kk7-raster-layer[value="${key}"]`);
+    if(!checkbox || !checkbox.checked) return;
+    const config = kk7RasterLayerConfigs[key];
+    activeKk7RasterLayers[key] = L.tileLayer(`https://thermal.kk7.ch/tiles/${config.tileName}_${category}/{z}/{x}/{y}.png?src=${thermalSource()}`, {
+      attribution: 'thermal.kk7.ch <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC-BY-NC-SA</a>',
+      className: config.className || '',
+      maxNativeZoom: config.maxNativeZoom,
+      maxZoom: 18,
+      opacity: layerOpacity(),
+      tms: true,
+      zIndex: 300 + index
+    }).addTo(map);
+  });
+  updateLayerSummary();
+}
+function updateLayerOpacity(){
+  updateOpacityLabel();
+  Object.values(activeKk7RasterLayers).forEach((layer) => layer.setOpacity(layerOpacity()));
+  if(activeHotspotsLayer){
+    activeHotspotsLayer.eachLayer((layer) => {
+      if(layer.setStyle) layer.setStyle({ opacity: layerOpacity(), fillOpacity: Math.min(.95, layerOpacity() + .25) });
+    });
+  }
+}
+function syncSeasonControlState(){
+  const enabled = document.getElementById('timeFilter').checked;
+  document.querySelectorAll('input[name="season"], input[name="timeOfDay"]').forEach((input) => {
+    input.disabled = !enabled;
+  });
+  updateLayerSummary();
+}
+function initTimeFilterDefaults(){
+  const season = document.querySelector(`input[name="season"][value="${currentSeasonKey()}"]`);
+  if(season) season.checked = true;
+  const allDay = document.querySelector('input[name="timeOfDay"][value="all"]');
+  if(allDay) allDay.checked = true;
+  syncSeasonControlState();
+  updateOpacityLabel();
+}
+function removeHotspotsLayer(){
+  if(activeHotspotsLayer){
+    map.removeLayer(activeHotspotsLayer);
+    activeHotspotsLayer = null;
+  }
+}
+function hotspotStyle(feature){
+  const probability = Number(feature.properties && feature.properties.probability) || 0;
+  return {
+    radius: 4 + probability * 5,
+    color: '#3a2100',
+    weight: 1,
+    opacity: layerOpacity(),
+    fillColor: '#ffb300',
+    fillOpacity: Math.min(.95, layerOpacity() + .25)
+  };
+}
+async function loadHotspots(){
+  updateLayerSummary();
+  if(!document.getElementById('hotspotsLayer').checked){
+    removeHotspotsLayer();
+    return;
+  }
+  const requestId = ++hotspotRequestId;
+  const b = map.getBounds();
+  const bbox = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].map((n) => n.toFixed(6)).join(',');
+  const url = `https://thermal.kk7.ch/api/hotspots/geojson/${kk7Category()}/${bbox}?limit=250`;
+  try{
+    const response = await fetch(url);
+    if(!response.ok) throw new Error(`Hotspots ${response.status}`);
+    const data = await response.json();
+    if(requestId !== hotspotRequestId) return;
+    removeHotspotsLayer();
+    activeHotspotsLayer = L.geoJSON(data, {
+      pointToLayer: (feature, latlng) => L.circleMarker(latlng, hotspotStyle(feature))
+    }).addTo(map);
+  }catch(error){
+    if(requestId === hotspotRequestId) removeHotspotsLayer();
+  }
+}
+function scheduleHotspotsReload(){
+  if(!document.getElementById('hotspotsLayer').checked) return;
+  clearTimeout(hotspotReloadTimer);
+  hotspotReloadTimer = setTimeout(loadHotspots, 250);
+}
+function refreshKk7Layers(){
+  syncSeasonControlState();
+  syncKk7RasterLayers();
+  loadHotspots();
+}
+
+const markers = [];
+const bounds = [];
+const koreaBounds = [];
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+function windguruUrl(id){ return `https://www.windguru.cz/${encodeURIComponent(String(id).replace(/\D/g, ''))}`; }
+function addMarker(s){
+  const marker = L.marker([s.lat, s.lon]).addTo(map);
+  marker.bindPopup(`<div class="popup-title">${escapeHtml(s.place)} ${escapeHtml(s.name)}</div>
+    <div class="popup-line"><b>Region:</b> ${escapeHtml(s.region)}</div>
+    <div class="popup-line"><b>Info:</b> ${escapeHtml(s.note || '-')}</div>
+    <div class="popup-line"><b>Windguru ID:</b> ${escapeHtml(s.id)}</div>
+    <a class="wg-btn" target="_blank" rel="noopener noreferrer" href="${windguruUrl(s.id)}">View Windguru</a>`);
+  marker.site = s;
+  markers.push(marker);
+  bounds.push([s.lat, s.lon]);
+  if(s.region !== 'Overseas') koreaBounds.push([s.lat, s.lon]);
+}
+sites.forEach(addMarker);
+map.fitBounds(koreaBounds, {padding:[28,28], maxZoom: 8});
+
+const regionSelect = document.getElementById('region');
+[...new Set(sites.map(s=>s.region))].sort().forEach(r => {
+  const opt = document.createElement('option'); opt.value = r; opt.textContent = r; regionSelect.appendChild(opt);
+});
+function visibleMarkers(){ return markers.filter(m => map.hasLayer(m)); }
+function updateCount(n){ document.getElementById('count').textContent = `Showing: ${n} / total ${sites.length}`; }
+function fitVisible(maxZoom=11){
+  const visible = visibleMarkers().map(m => [m.site.lat, m.site.lon]);
+  if(visible.length) map.fitBounds(visible, {padding:[44,44], maxZoom});
+}
+function applyFilter({fit=true}={}){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const r = regionSelect.value;
+  let visible = [];
+  markers.forEach(m => {
+    const s = m.site;
+    const hitQ = !q || `${s.region} ${s.place} ${s.name} ${s.note} ${s.id}`.toLowerCase().includes(q);
+    const hitR = !r || s.region === r;
+    if(hitQ && hitR){ if(!map.hasLayer(m)) m.addTo(map); visible.push([s.lat, s.lon]); }
+    else { if(map.hasLayer(m)) map.removeLayer(m); }
+  });
+  updateCount(visible.length);
+  if(fit && visible.length) map.fitBounds(visible, {padding:[44,44], maxZoom: 11});
+}
+function showKorea(){
+  document.getElementById('search').value = '';
+  regionSelect.value = '';
+  markers.forEach(m => {
+    if(m.site.region === 'Overseas') map.removeLayer(m); else if(!map.hasLayer(m)) m.addTo(map);
+  });
+  updateCount(visibleMarkers().length);
+  map.fitBounds(koreaBounds, {padding:[28,28], maxZoom: 8});
+}
+function showAll(){
+  document.getElementById('search').value = '';
+  regionSelect.value = '';
+  markers.forEach(m => { if(!map.hasLayer(m)) m.addTo(map); });
+  updateCount(visibleMarkers().length);
+  map.fitBounds(bounds, {padding:[28,28], maxZoom: 6});
+}
+document.getElementById('search').addEventListener('input', () => applyFilter());
+regionSelect.addEventListener('change', () => applyFilter());
+document.getElementById('btnKorea').addEventListener('click', showKorea);
+document.getElementById('btnAll').addEventListener('click', showAll);
+document.getElementById('btnClear').addEventListener('click', showKorea);
+document.getElementById('toggleLayerPanel').addEventListener('click', () => {
+  const layerPanel = document.getElementById('layerPanel');
+  const willOpen = layerPanel.hasAttribute('hidden');
+  layerPanel.toggleAttribute('hidden', !willOpen);
+  document.getElementById('toggleLayerPanel').textContent = willOpen ? 'Close Options' : 'Map Options';
+  document.getElementById('toggleLayerPanel').setAttribute('aria-expanded', String(willOpen));
+});
+document.querySelectorAll('input[name="baseLayer"]').forEach((input) => {
+  input.addEventListener('change', (e) => setBaseLayer(e.target.value));
+});
+document.querySelectorAll('.kk7-raster-layer').forEach((input) => {
+  input.addEventListener('change', syncKk7RasterLayers);
+});
+document.getElementById('hotspotsLayer').addEventListener('change', loadHotspots);
+document.getElementById('timeFilter').addEventListener('change', refreshKk7Layers);
+document.querySelectorAll('input[name="season"], input[name="timeOfDay"]').forEach((input) => {
+  input.addEventListener('change', refreshKk7Layers);
+});
+document.getElementById('thermalOpacity').addEventListener('input', updateLayerOpacity);
+map.on('moveend zoomend', scheduleHotspotsReload);
+document.getElementById('togglePanel').addEventListener('click', () => {
+  const panel = document.getElementById('panel');
+  const collapsed = panel.classList.toggle('collapsed');
+  document.getElementById('togglePanel').textContent = collapsed ? '열기' : '접기';
+  setTimeout(() => map.invalidateSize(), 120);
+});
+initTimeFilterDefaults();
+syncKk7RasterLayers();
+showKorea();
+</script>
+</body>
+</html>
